@@ -1,0 +1,112 @@
+
+
+
+function	script	vip	{
+
+set $nivelVip, 1;
+set $diasVip, 1;
+set $verificaVip, 1;
+
+if (getgroupid() == 1) goto extender;
+
+query_sql "UPDATE `login` SET `group_id` = "+$nivelVip+", `dt_vip` = DATE_ADD(CURDATE(),INTERVAL "+$diasVip+" DAY) WHERE `group_id` = 0 AND `account_id` = "+getcharid(3);
+
+dispbottom "Vip inserido com sucesso! Relogue seu personagem para ativá-lo.";
+end;
+
+estender:
+
+query_sql "UPDATE `login` SET `group_id` = "+$nivelVip+", `dt_vip` = DATE_ADD(`dt_vip`,INTERVAL "+$diasVip+" DAY) WHERE `group_id` = "+$nivelVip+" AND `account_id` = "+getcharid(3);
+
+dispbottom "Vip estendido por mais "+$diasVip+" dias! Relogue seu personagem para ativá-lo.";
+end;
+
+}
+
+//==========================================================================================================================
+// Função que adiciona 7 dias Vip ao usuário
+//==========================================================================================================================
+
+function	script	ReloadedROVIP05	{
+
+set $nivelVip, 1;
+set $diasVip, 7;
+set $verificaVip, 1;
+
+if (getgroupid() == 1) goto extender;
+
+query_sql "UPDATE `login` SET `group_id` = "+$nivelVip+", `dt_vip` = DATE_ADD(CURDATE(),INTERVAL "+$diasVip+" DAY) WHERE `group_id` = 0 AND `account_id` = "+getcharid(3);
+
+dispbottom "Vip inserido com sucesso! Relogue seu personagem para ativá-lo.";
+end;
+
+estender:
+
+query_sql "UPDATE `login` SET `group_id` = "+$nivelVip+", `dt_vip` = DATE_ADD(`dt_vip`,INTERVAL "+$diasVip+" DAY) WHERE `group_id` = "+$nivelVip+" AND `account_id` = "+getcharid(3);
+
+dispbottom "Vip estendido por mais "+$diasVip+" dias! Relogue seu personagem para ativá-lo.";
+end;
+
+}
+
+//==========================================================================================================================
+// Função que adiciona 15 dias Vip ao usuário
+//==========================================================================================================================
+
+function	script	vip30	{
+
+set $nivelVip, 1;
+set $diasVip, 30;
+set $verificaVip, 1;
+
+if (getgroupid() == 1) goto extender;
+
+query_sql "UPDATE `login` SET `group_id` = "+$nivelVip+", `dt_vip` = DATE_ADD(CURDATE(),INTERVAL "+$diasVip+" DAY) WHERE `group_id` = 0 AND `account_id` = "+getcharid(3);
+
+dispbottom "Vip inserido com sucesso! Relogue seu personagem para ativá-lo.";
+end;
+
+estender:
+
+query_sql "UPDATE `login` SET `group_id` = "+$nivelVip+", `dt_vip` = DATE_ADD(`dt_vip`,INTERVAL "+$diasVip+" DAY) WHERE `group_id` = "+$nivelVip+" AND `account_id` = "+getcharid(3);
+
+dispbottom "Vip estendido por mais "+$diasVip+" dias! Relogue seu personagem para ativá-lo.";
+end;
+
+}
+
+//==========================================================================================================================
+// Função que controla a data de término da conta vip e anúncios ao logar
+//==========================================================================================================================
+
+-	script	GerenciadorVip	FAKE_NPC,{
+
+OnPCLoginEvent:
+
+set @site$, "www.nwpro.com";
+
+query_sql "UPDATE `login` SET `group_id`= 0 WHERE `group_id` = "+$nivelVip+" AND (`dt_vip` IS NULL OR `dt_vip` < CURDATE())";
+query_sql "SELECT (`dt_vip` IS NULL OR `dt_vip` < CURDATE()) FROM `login` WHERE `account_id` = "+getcharid(3), @verificaVip;
+
+if (@verificaVip) {
+
+dispbottom "Torne-se um(a) jogador(a) Vip e tenha benefícios esclusivos!";
+dispbottom "Acesse "+@site$+" e saiba mais!";
+end;
+
+}
+
+query_sql "SELECT DATE_FORMAT(`dt_vip`, '%d/%m/%Y') FROM `login` WHERE `account_id` = "+getcharid(3), @dataVencimento$;
+
+dispbottom "Sua conta Vip é válida até o dia "+@dataVencimento$+"";
+end;
+
+}
+Item_db:
+7711, 'Ticket_VIP[1]', 'Ticket VIP[1]', 0, 10000, NULL, 10, NULL, NULL, NULL, NULL, 4294967295, 7, 2, NULL, NULL, NULL, NULL, NULL, 'callfunc "vip";', NULL, NULL);
+
+7712, 'Ticket_VIP[7]', 'Ticket VIP[7]', 0, 10000, NULL, 10, NULL, NULL, NULL, NULL, 4294967295, 7, 2, NULL, NULL, NULL, NULL, NULL, 'callfunc "vip7";', NULL, NULL);
+
+7713, 'Ticket_VIP[30]', 'Ticket VIP[30]', 0, 10000, NULL, 10, NULL, NULL, NULL, NULL, 4294967295, 7, 2, NULL, NULL, NULL, NULL, NULL, 'callfunc "vip30";', NULL, NULL);
+
+ALTER TABLE `login` ADD `dt_vip` INT(4) NOT NULL DEFAULT '0';

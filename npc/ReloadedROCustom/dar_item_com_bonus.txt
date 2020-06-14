@@ -1,0 +1,11 @@
+prontera,149,183,5	script	skjhsdfkj	1_F_MARIA,{
+	setarray .@OptID[0],RDMOPT_VAR_ATTPOWER;
+	setarray .@OptVal[0],10;
+	setarray .@OptParam[0],0;
+	//getitem3 1501, 1,1,0,0, 0,0,0,0, .@OptID,.@OptVal,.@OptParam;
+	setarray .@OptVal[0],100;
+	//getitem3 1501, 1,1,0,0, 0,0,0,0, .@OptID,.@OptVal,.@OptParam;
+	setarray .@OptVal[0],1000;
+	//getitem3 1501, 1,1,0,0, 0,0,0,0, RDMOPTG_MaxHP,1,RDMOPT_VAR_MAXHPAMOUNT,600,0,RDMOPT_VAR_HPACCELERATION,20,0,RDMOPT_VAR_MAXHPPERCENT,7,0;
+	end;
+}

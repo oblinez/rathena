@@ -1,0 +1,17 @@
+prontera,144,173,5	script	teste comandos	833,{
+
+switch(select("tirar:Colocar 1 minuto:Diminuir para 30")){
+
+case 1:
+sc_end SC_EXPBOOST;
+end;
+
+case 2:
+sc_start SC_EXPBOOST,60000,100;
+end;
+
+case 3:
+sc_start SC_EXPBOOST,30000,100;
+end;
+}
+}

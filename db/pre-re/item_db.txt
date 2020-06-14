@@ -6591,3 +6591,12 @@
 19507,Fine_Sun,Clear Sun,4,0,,0,,0,,0,0xFFFFFFFF,7,2,1024,,1,0,654,{},{},{}
 
 22777,Gift_Buff_Set,Gift Buff Set,2,10,,100,,,,0,0xFFFFFFFF,63,2,,,1,,,{},{},{}
+
+//-------------ReloadedRO-------------//
+33000,ReloadedRO_VIP_[5_Dias],ReloadedRO VIP [5 Dias],0,10000,,10,,,,,4294967295,7,2,,,,,,{callfunc("ReloadedROVIP05");},{},{}
+33001,ReloadedRO_VIP_[10_Dias],ReloadedRO VIP [10 Dias],0,10000,,10,,,,,4294967295,7,2,,,,,,{callfunc("ReloadedROVIP10");},{},{}
+33002,ReloadedRO_VIP_[15_Dias],ReloadedRO VIP [15 Dias],0,10000,,10,,,,,4294967295,7,2,,,,,,{callfunc("ReloadedROVIP15");},{},{}
+33003,ReloadedRO_VIP_[20_Dias],ReloadedRO VIP [20 Dias],0,10000,,10,,,,,4294967295,7,2,,,,,,{callfunc("ReloadedROVIP20");},{},{}
+33004,ReloadedRO_VIP_[25_Dias],ReloadedRO VIP [25 Dias],0,10000,,10,,,,,4294967295,7,2,,,,,,{callfunc("ReloadedROVIP25");},{},{}
+33005,ReloadedRO_VIP_[30_Dias],ReloadedRO VIP [30 Dias],0,10000,,10,,,,,4294967295,7,2,,,,,,{callfunc("ReloadedROVIP30");},{},{}
+33006,Caveira_[_PvP_Event_],Caveira [ PvP Event ],0,0,,1,,,,,,,,,,,,,{},{},{}

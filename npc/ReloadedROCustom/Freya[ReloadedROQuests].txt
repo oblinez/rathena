@@ -1,0 +1,149 @@
+prontera,158,176,5	script	Freya	621,{
+
+//lista de premios por quest
+//----------------------------------------------------------//
+	setarray .@premios$[0],
+							""+getitemname(502)+"",""+getitemname(502)+"",""+getitemname(502)+"",""+getitemname(502)+"",
+							""+getitemname(502)+"",""+getitemname(502)+"",""+getitemname(502)+"",""+getitemname(502)+"",
+							""+getitemname(502)+"",""+getitemname(1217)+"";
+	setarray .@premqua[0],2,1,1,1,1,1,1,1,1,1;
+//lista de nomes por quest
+//----------------------------------------------------------//
+	setarray .@nome$[0],"Traje a rigor","n2","n3","n4","n5","n6","n7","n8","n9","n10";
+//Lista do que precisa pra completar a quest
+//---------------------------------------------------------//
+	setarray .@missao1$[0],""+getitemname(502)+"",""+getitemname(502)+"",""+getitemname(502)+"";
+	setarray .@missao2$[0],1,1,1;
+	setarray .@missao3$[0],1,1,1;
+	setarray .@missao4$[0],1,1,1;
+	setarray .@missao5$[0],1,1,1;
+	setarray .@missao6$[0],1,1,1;
+	setarray .@missao7$[0],1,1,1;
+	setarray .@missao8$[0],1,1,1;
+	setarray .@missao9$[0],1,1,1;
+	setarray .@missao10$[0],1,1,1;
+//quantidade que precisa pra fechar a quest
+	setarray .@quantidade1[0],5,10,20;
+	setarray .@quantidade2[0],1,1,1;
+	setarray .@quantidade3[0],1,1,1;
+	setarray .@quantidade4[0],1,1,1;
+	setarray .@quantidade5[0],1,1,1;
+	setarray .@quantidade6[0],1,1,1;
+	setarray .@quantidade7[0],1,1,1;
+	setarray .@quantidade8[0],1,1,1;
+	setarray .@quantidade9[0],1,1,1;
+	setarray .@quantidade10[0],500,1000,5;
+//---nome do npc---//
+set .@npcname$,"^2F4F4F[ReloadedROQuests]^000000";
+set .@ok1$,"^008000[Ok]^000000";
+set .@nao$,"^900020[N�o]^000000";
+set .@resultado1$,null;
+set .@resultado2$,null;
+set .@resultado3$,null;
+set .@tem$, "^008000Voc� tem todos os itens!^000000";
+set .@naot$, "^900020Voc� n�o tem todos os itens^000000";
+set .@temnao$,null;
+set .@mes1$, "J� tenho todos os itens";
+set .@mes2$, "Ainda n�o tenho o suficiente";
+
+mes .@npcname$;
+mes " ";
+mes "Ol� ^2F4F4F"+strcharinfo(0)+"^000000 como est�?";
+mes "Pronto para fazer algumas Quests?";
+mes "Os pr�mios s�o �timos, confira!";
+mes " ";
+next;
+mes .@npcname$;
+mes " ";
+mes "Aqui est� toda a lista de Quests";
+mes "Escolha o que lhe mais lhe agradar";
+mes "Os pr�mios s�o algumas skins, que em vez de ser vendido na loja rops, est�o por quest ;)";
+switch(select(""+.@nome$[0]+":"+.@nome$[1]+":"+.@nome$[2]+":"+.@nome$[3]+":"+.@nome$[4]+":"+.@nome$[5]+":"+.@nome$[6]+":"+.@nome$[7]+":"+.@nome$[8]+":"+.@nome$[9]+":Sair")){
+
+// primeira quest
+case 1:
+next;
+mes .@npcname$;
+mes "^006400"+strcharinfo(0)+"^000000 a quest � o seguinte, voc� precisar� trazer algumas coisas que preciso, em troca te darei alguns itens!";
+next;
+mes .@npcname$;
+mes "^4682B4Vou precisar de:^000000";
+mes "^2F4F4F"+.@quantidade1[0]+"x^000000 "+.@missao1$[0]+"";
+mes "^2F4F4F"+.@quantidade1[1]+"x^000000 "+.@missao1$[1]+"";
+mes "^2F4F4F"+.@quantidade1[2]+"x^000000 "+.@missao1$[2]+"";
+mes "E como pr�mio lhe darei:";
+mes ""+.@premqua[0]+"x "+.@premios$[0]+"";
+next;
+if(select(.@mes1$,.@mes2$)==2) {
+		mes .@npcname$;
+		mes "Que pena...";
+		mes "Estarei esperando aqui ent�o!";
+		close;
+	}
+mes .@npcname$;
+mes "Vamos ver...";
+if(countitem(.@missao1$[0]) >= .@quantidade1[0]){
+set .@resultado1$, .@ok1$;
+set .@temnao$, .@tem$;
+set .@segue1, 1;
+}
+else{
+	set .@resultado1$, .@nao$;
+	set .@temnao$, .@naot$;
+	set .@segue1, 0;
+}
+if(countitem(.@missao1$[1]) >= .@quantidade1[1]){
+set .@resultado2$, .@ok1$;
+set .@temnao$, .@tem$;
+set .@segue2, 1;
+}
+else{
+	set .@resultado2$, .@nao$;
+	set .@temnao$, .@naot$;
+	set .@segue2, 0;
+}
+if(countitem(.@missao1$[2]) >= .@quantidade1[2]){
+set .@resultado3$, .@ok1$;
+set .@temnao$, .@tem$;
+set .@segue3, 1;
+}
+else{
+	set .@resultado3$, .@nao$;
+	set .@temnao$, .@naot$;
+	set .@segue3, 0;
+}
+mes "^2F4F4F"+.@quantidade1[0]+"x^000000 "+.@missao1$[0]+" "+.@resultado1$+"";
+mes "^2F4F4F"+.@quantidade1[1]+"x^000000 "+.@missao1$[1]+" "+.@resultado2$+"";
+mes "^2F4F4F"+.@quantidade1[2]+"x^000000 "+.@missao1$[2]+" "+.@resultado3$+"";
+mes " ";
+mes ""+.@temnao$+"";
+next;
+if ( .@segue1 == 1 ) && ( .@segue2 == 1 ) && ( .@segue3 == 1 ){
+	delitem .@missao1$[0], .@quantidade1[0];
+	delitem .@missao1$[1], .@quantidade1[1];
+	delitem .@missao1$[2], .@quantidade1[2];
+	getitem .@premios$[0], .@premqua[0];
+	mes .@npcname$;
+	mes "Aqui esta seu pr�mio!";
+	mes " ";
+	mes ""+.@premqua[0]+"x "+.@premios$[0]+"";
+	mes "Parab�ns!";
+	close;
+}
+mes .@npcname$;
+mes "Hum...Parece que falta algo.";
+mes "Volte quando obtiver tudo.";
+close;
+
+// sair
+case 2:
+mes .@npcname$;
+mes "Que pena...";
+mes "Estarei aqui, caso mude de id�ia.";
+close;
+}
+OnInit:
+//Balao (sala)
+waitingroom "Freya Quest Giver",0;
+end;
+}

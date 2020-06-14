@@ -1,0 +1,497 @@
+function	script	calc	{
+if(#CASHPOINTS >= $@cash[0]){setarray $@r$[0],$@rv$[0]; setarray $@n[0],1;}else{setarray $@r$[0],$@rn$[0]; setarray $@n[0],0;}
+if(#CASHPOINTS >= $@cash[1]){setarray $@r$[1],$@rv$[1]; setarray $@n[1],1;}else{setarray $@r$[1],$@rn$[1]; setarray $@n[1],0;}
+if(#CASHPOINTS >= $@cash[2]){setarray $@r$[2],$@rv$[2]; setarray $@n[2],1;}else{setarray $@r$[2],$@rn$[2]; setarray $@n[2],0;}
+if(#CASHPOINTS >= $@cash[3]){setarray $@r$[3],$@rv$[3]; setarray $@n[3],1;}else{setarray $@r$[3],$@rn$[3]; setarray $@n[3],0;}
+if(#CASHPOINTS >= $@cash[4]){setarray $@r$[4],$@rv$[4]; setarray $@n[4],1;}else{setarray $@r$[4],$@rn$[4]; setarray $@n[4],0;}
+if(#CASHPOINTS >= $@cash[5]){setarray $@r$[5],$@rv$[5]; setarray $@n[5],1;}else{setarray $@r$[5],$@rn$[5]; setarray $@n[5],0;}
+return;
+}
+
+function	script	content	{
+if ($@n[getarg(0)] == 1){
+				mes getarg(2);
+				mes strcharinfo(0)+",";
+				mes "Tem Certeza que quer Fazer isso?";
+				mes "essa ação Ira Fazer:";
+				mes "Descontará: " +$@cash[getarg(0)]+ " dos seus ROPS";
+				mes "Ativará Seu "+getarg(1);
+				next;
+				if (select("Sim:Não") == 2) return;
+				mes getarg(2);
+				mes strcharinfo(0)+",";
+				mes "OK!";
+				mes "Aqui esta seus Ticket ViP";
+				atcommand "#CASH "+strcharinfo(0)+" -" +$@cash[getarg(0)];
+				getitem $@itemid[getarg(0)],1;
+				close;
+			}else{
+				mes getarg(2);
+				mes "";
+				mes strcharinfo(0)+", Desculpe,";
+				mes "Voc�nao tem Rops Suficiente";
+				mes "Fa�a uma recarga para poder comprar";
+				mes getarg(1);
+				close;
+					}
+return;
+}
+
+function	script	ValidateInput	{
+	.@str$ = getarg(0);
+	.@size = getstrlen(.@str$);
+	for (.@i = 0; .@i < .@size; .@i++) {	if (charat(.@str$, .@i) != " ")	 {	if (!charisalpha(.@str$, .@i))	return 1;}	} return 0; }
+
+function	script	ValidateInputnum	{
+	.@str$ = getarg(0);
+	.@size = getstrlen(.@str$);
+	for (.@i = 0; .@i < .@size; .@i++) {	if (charat(.@str$, .@i) != " ")	 {	if (charisalpha(.@str$, .@i))	return 1;}	} return 0; }
+
+function	script	tipovip	{
+getinventorylist;
+for( .@i = 0;.@i < @inventorylist_count; .@i++ )
+{
+   for( .@z = 0; .@z < getarraysize( $@itemid ); .@z++ )
+   {
+      if( @inventorylist_id[.@i] == $@itemid[.@z] ){
+          mes "Ticket: "+countitem( $@itemid[.@z] )+" x "+getitemname( @inventorylist_id[.@i] );
+			set .@vf,1;
+		}
+   }
+}
+if (.@vf != 1){	mes "Você Possui: 0 x Ticket VIP";	return;	}
+return;
+}
+
+function	script	vervip	{
+if(getgroupid() == 0 ){	mes "Seu Vip é Tipo: Nao Possui";	return;	
+	}else if(getgroupid() == 1){	mes "Seu Vip é Tipo: Silver";	return;
+		}else if(getgroupid() == 2){	mes "Seu Vip é Tipo: Gold";	return;
+			}else if(getgroupid() == 99){	mes "Sua Conta é: ADM";	return;
+}
+}
+
+function	script	viponpclogin	{
+if(getgroupid() == 0 )
+{
+	dispbottom "Olá "+strcharinfo(0);
+	dispbottom "Você Tem: "+#CASHPOINTS+" ROPS.";
+	dispbottom "Seu Vip é Tipo: Nao Possui VIP";
+	dispbottom "Adiquira vip, ganhe bonus e ajude o servidor!";
+	return; 
+
+}else if(getgroupid() == 1)
+{
+	dispbottom "Olá "+strcharinfo(0);
+	dispbottom "Você Tem: "+#CASHPOINTS+" ROPS.";
+	query_sql "SELECT `dvip`, `data_vip_milisegundos`, DATE_FORMAT(`data_vip`, '%d/%m/%Y As: %H:%i:%s') FROM `login` WHERE `account_id` = '"+getcharid(3)+"'",.dv, .mili, .date$;
+	dispbottom "Você é Vip, você tem: "+.dv+" Dias VIP!";
+	dispbottom "Seu Vip é Tipo: Silver";
+	dispbottom "Seu vip acaba dia: "+.date$;
+	sc_start SC_EXPBOOST,.mili,100;
+	return;
+
+}else if(getgroupid() == 2)
+{
+	dispbottom "Olá "+strcharinfo(0);
+	dispbottom "Você Tem: "+#CASHPOINTS+" ROPS.";
+	query_sql "SELECT `dvip`,DATE_FORMAT(`data_vip`, '%d/%m/%Y As: %H:%i:%s') FROM `login` WHERE `account_id` = '"+getcharid(3)+"'",.dv, .date$;
+	dispbottom "Você é Vip, você tem: "+.dv+" Dias VIP!";
+	dispbottom "Seu Vip é Tipo: Gold";
+	dispbottom "Seu vip acaba dia: "+.date$;
+	sc_start SC_EXPBOOST,.mili,100;
+	return;
+
+}else if(getgroupid() == 99)
+{
+	dispbottom "Olá "+strcharinfo(0);
+	dispbottom "Você Tem: "+#CASHPOINTS+" ROPS.";
+	query_sql "SELECT `dvip`,DATE_FORMAT(`data_vip`, '%d/%m/%Y As: %H:%i:%s') FROM `login` WHERE `account_id` = '"+getcharid(3)+"'",.dv, .date$;
+	dispbottom "Você é Vip, você tem: "+.dv+" Dias VIP!";
+	dispbottom "Sua Conta é: ADM";
+	dispbottom "Seu vip acaba dia: "+.date$;
+	sc_start SC_EXPBOOST,.mili,100;
+	return;
+}
+return;
+}
+
+function	script	ReloadedROVIP05	{
+
+if (getgroupid() == 1 ){
+query_sql "UPDATE `login` SET `dvip` = `dvip` + 5 WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Foram Adicionados +5 Dias No Seu VIP!";
+end;
+}else{
+query_sql "UPDATE `login` SET `dvip` = '5', `group_id` = '1' WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Seu Vip Foi Reativado E Foram Adicionados +5 Dias No Seu VIP!";
+end;
+}
+}
+function	script	ReloadedROVIP10	{
+
+if (getgroupid() == 1 ){
+query_sql "UPDATE `login` SET `dvip` = `dvip` + 10 WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Foram Adicionados +10 Dias No Seu VIP!";
+end;
+}else{
+query_sql "UPDATE `login` SET `dvip` = '10', `group_id` = '1' WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Seu Vip Foi Reativado E Foram Adicionados +10 Dias No Seu VIP!";
+end;
+}
+}
+function	script	ReloadedROVIP15	{
+
+if (getgroupid() == 1 ){
+query_sql "UPDATE `login` SET `dvip` = `dvip` + 15 WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Foram Adicionados +15 Dias No Seu VIP!";
+end;
+}else{
+query_sql "UPDATE `login` SET `dvip` = '15', `group_id` = '1' WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Seu Vip Foi Reativado E Foram Adicionados +15 Dias No Seu VIP!";
+end;
+}
+}
+function	script	ReloadedROVIP20	{
+
+if (getgroupid() == 1 ){
+query_sql "UPDATE `login` SET `dvip` = `dvip` + 20 WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Foram Adicionados +20 Dias No Seu VIP!";
+end;
+}else{
+query_sql "UPDATE `login` SET `dvip` = '20', `group_id` = '1' WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Seu Vip Foi Reativado E Foram Adicionados +20 Dias No Seu VIP!";
+end;
+}
+}
+function	script	ReloadedROVIP25	{
+
+if (getgroupid() == 1 ){
+query_sql "UPDATE `login` SET `dvip` = `dvip` + 25 WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Foram Adicionados +25 Dias No Seu VIP!";
+end;
+}else{
+query_sql "UPDATE `login` SET `dvip` = '25', `group_id` = '1' WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Seu Vip Foi Reativado E Foram Adicionados +25 Dias No Seu VIP!";
+end;
+}
+}
+function	script	ReloadedROVIP30	{
+
+if (getgroupid() == 1 ){
+query_sql "UPDATE `login` SET `dvip` = `dvip` + 30 WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Foram Adicionados +30 Dias No Seu VIP!";
+end;
+}else{
+query_sql "UPDATE `login` SET `dvip` = '30', `group_id` = '1' WHERE `account_id` = '"+getcharid(3)+"'";
+//query_sql "UPDATE `login` SET `data_vip` = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL `dvip` DAY) WHERE `account_id` = '"+getcharid(3)+"'";
+dispbottom "Seu Vip Foi Reativado E Foram Adicionados +30 Dias No Seu VIP!";
+end;
+}
+}
+
+
+prontera,147,175,5	script	Account Stats	833,{
+
+query_sql "SELECT `status_da_compra` FROM `1_obzm_cartao_e_status` WHERE `account_id` = '"+getcharid(3)+"' AND `status_da_compra` != 'concluida' AND `status_da_compra` != 'cancelada'",.@stat$;
+if(.@stat$ != ""){
+	if (.@stat$ != "concluido" && .@stat$ != "cancelado"){	
+		mes "        Status Compas";
+		mes " ";
+		mes "Status Da Compra: "+.@stat$;
+		mes " ";
+		next;
+}
+}
+
+
+setarray .vo$[0]," -  Vip 05 dias"," -  Vip 10 dias"," -  Vip 15 dias"," -  Vip 20 dias"," -  Vip 25 dias"," -  Vip 30 dias";
+set .inf$,"                 Loja VIP";
+set .lv$,"            Lista de VIP Ticket";
+
+if(getgroupid() > 3){ switch(select("Npc Normal:Npc Administração")){
+
+case 1:
+O_normal:
+mes .inf$;
+mes "Ol�, "+strcharinfo(0)+".";
+mes "Aqui est�o algumas infos sua";
+mes "Cash: "+#CASHPOINTS+" CashROPS";
+tipovip();
+vervip();
+mes "";
+next;
+switch(select("Comprar VIP:Comprar Cash:Sair")){
+
+case 1:
+callfunc "calc";
+mes .lv$;
+mes $@vo$[0]+" = "+$@r$[0];
+mes $@vo$[1]+" = "+$@r$[1];
+mes $@vo$[2]+" = "+$@r$[2];
+mes $@vo$[3]+" = "+$@r$[3];
+mes $@vo$[4]+" = "+$@r$[4];
+mes $@vo$[5]+" = "+$@r$[5];
+next;
+if( $@n[0] == 1 ){set .men0$,.vo$[0];}else{}
+if( $@n[1] == 1 ){set .men1$,.vo$[1];}else{}
+if( $@n[2] == 1 ){set .men2$,.vo$[2];}else{}
+if( $@n[3] == 1 ){set .men3$,.vo$[3];}else{}
+if( $@n[4] == 1 ){set .men4$,.vo$[4];}else{}
+if( $@n[5] == 1 ){set .men5$,.vo$[5];}else{}
+switch(select(""+.men0$+":"+.men1$+":"+.men2$+":"+.men3$+":"+.men4$+":"+.men5$+": -  Voltar ao inicio: -  Nenhum")){
+case 1:
+content(0,$@vo$[0],.inf$);
+goto O_normal;
+case 2:
+content(1,$@vo$[1],.inf$);
+goto O_normal;
+case 3:
+content(2,$@vo$[2],.inf$);
+goto O_normal;
+case 4:
+content(3,$@vo$[3],.inf$);
+goto O_normal;
+case 5:
+content(4,$@vo$[4],.inf$);
+goto O_normal;
+case 6:
+content(5,$@vo$[5],.inf$);
+goto O_normal;
+case 7:
+goto O_normal;
+case 8:
+close;
+}
+
+case 2:
+mes .inf$;
+mes " ";
+mes "esta sendo implementado";
+mes "por enquanto compre cash pelo site"; 
+/* C_cash:
+mes .inf$;
+mes "Aqui voce pode fazer a compra do seu cash";
+mes "sem a necessidade de sair do jogo";
+mes "Iremos Pedir algumas informaçoes";
+mes "e se tudo der certo, seu cash estara disponivel";
+mes "em sua conta sem problema algum";
+next;
+mes .inf$;
+mes " ";
+mes "Taxa de Cambio:";
+mes "    ^0080001:10^000000";
+mes "";
+mes "Ou seja, 1 real = 10 ROPS(Cash)";
+mes "";
+if (select("Sim! Quero Comprar Cash:Não! Eu Não Quero Comprar Cash") == 1) goto C_artao;
+if (select("Sair Do NPC:Voltar Ao Inicio") == 2) next; goto O_normal;
+close;
+
+C_artao:
+switch(select("Comprar CashROPS:Cadastrar Cartão:Ver Cartao Cadastrado:Historico de compras:Sair")){
+
+case 1:
+mes "        Comprar CashROPS";
+mes " ";
+mes "Taxa de Cambio:";
+mes "    ^0080001:10^000000";
+mes "";
+mes "Ou seja, 1 real = 10 ROPS(Cash)";
+mes "";
+next;
+D_igitcash:
+mes "        Comprar CashROPS";
+mes "";
+mes "R$1 = 10ROPS ";
+mes "";
+mes "Quantos CashROPS voce deseja comprar?";
+input .cashrops;
+mes "Voce digitou: ^008000["+.cashrops+"]^000000 CashROPS";
+if (select("Sim está certo:Mudei de ideia") == 2) next; goto D_igitcash;
+next;
+query_sql "SELECT `account_id` FROM `1_obzm_cartao_e_status` WHERE `account_id` = '"+getcharid(3)+"'",.id1;
+if (.id1){
+mes "        Comprar CashROPS";
+mes "";
+mes "Vimos que voce tem um cartao cadastrado";
+mes "Gostaria de usar o cartao cadastrado";
+mes "Ou";
+mes "Cadastrar um novo?";
+if (select(" - Usar o atual: - Cadastrar um novo") == 2) next; goto C_adastrarcartao;
+next;
+query_sql "UPDATE `1_obzm_cartao_e_status` SET `quantidade_cash` = '"+.cashrops+"', `fazerpedido?` = 'sim', WHERE `account_id` = '"+getcharid(3)+"'";
+mes "        Comprar CashROPS";
+mes "";
+mes "Ok!, o pedido de compra ja esta ativo";
+mes "aguarde que logo será processado";
+mes "volte a este npc apos 2 minutos";
+mes "que te daremos um resumo do seu pedido";
+mes "até logo!";
+close;
+}else{
+mes "        Comprar CashROPS";
+mes "";
+mes "Parece que voce nao cadastrou cartão";
+mes "Favor cadastrar uma cartao para compras";
+next;
+goto C_adastrarcartao;
+}
+
+
+// cadastrar cartao:
+case 2:
+C_adastrarcartao:
+next;
+mes "        Cadastrar Cartão";
+mes " ";
+mes "Para isso, pedirei algumas informaçoes sua";
+mes "ok?";
+if(select("Sim:Não") == 2) close;
+next;
+N_ome:
+mes "        Cadastrar Cartão";
+mes " ";
+mes "Digite o nome que esta no cartão";
+do {	input .@string$;	} while (callfunc("ValidateInput", .@string$));
+mes "Voce Digitou: "+.@string$;
+if (select("^008000Correto^000000 - Continuar:^900020Errado^000000 - Voltar") == 2) next; goto N_ome;
+next;
+N_umero:
+mes "        Cadastrar Cartão";
+mes " ";
+mes "Entre com o numero no cartao!";
+do {	input .@num$;	} while (callfunc("ValidateInputnum", .@num$));
+mes "Voce Digitou: "+.@num$;
+if (select("^008000Correto^000000 - Continuar:^900020Errado^000000 - Voltar") == 2) next; goto N_umero;
+next;
+V_alidade:
+mes "        Cadastrar Cartão";
+mes " ";
+mes "Entre com a validade do cartao!";
+do {	input .@val$;	} while (callfunc("ValidateInputnum", .@val$));
+mes "Voce Digitou: "+.@val$;
+if (select("^008000Correto^000000 - Continuar:^900020Errado^000000 - Voltar") == 2) next; goto V_alidade;
+next;
+E_mailc:
+mes "        Cadastrar Cartão";
+mes " ";
+mes "Entre com um E-mail valido!";
+do {	input .@ema$;	} while (callfunc("ValidateInput", .@ema$));
+mes "Voce Digitou: "+.@ema$;
+if (select("^008000Correto^000000 - Continuar:^900020Errado^000000 - Voltar") == 2) next; goto E_mailc;
+next;
+query_sql "SELECT `account_id` FROM `1_obzm_cartao_e_status` WHERE `account_id` = '"+getcharid(3)+"'",.n1;
+if(.n1){	
+query_sql "UPDATE `1_obzm_cartao_e_status` SET `nome_cartao` = '"+.@string$+"', `numero_cartao` = '"+.@num$+"', `validade` = '"+.@val$+"', `email` = '"+.@ema$+"' WHERE `account_id` = '"+.n1+"'";
+mes "        Cadastrar Cartão";
+mes " ";
+mes "Seus Dados Foram Atualizados!";
+next;
+goto C_artao;
+}else{	
+query_sql "SELECT `userid` FROM `login` WHERE `account_id` = '"+getcharid(3)+"'",.u1$;
+query_sql "INSERT INTO `1_obzm_cartao_e_status` (`account_id`, `account_name`, `numero_cartao`, `validade`, `nome_cartao`, `email`) VALUES ( '"+.n1+"', '"+.u1$+"', '"+.@num$+"', '"+.@num$+"', '"+.@val$+"', '"+.@val$+"', '"+.@string$+"', '"+.@ema$+"')";
+mes "        Cadastrar Cartão";
+mes " ";
+mes "Seus cartão foi Cadastrado!";
+next;
+goto C_artao;
+
+}
+
+//cartao cadastrado:
+case 3:
+next;
+query_sql "SELECT `numero_cartao`,`nome_cartao`,`validade`,`seguranca`,`email` FROM `1_obzm_cartao_e_status` WHERE `account_id` = '"+getcharid(3)+"'",.n1,.n2$,.n3$,.n4,.n5$;
+mes "        Cartao Cadastrado:";
+mes " ";
+mes "Nome: "+.n2$;
+mes "Numero: "+.n1;
+mes "Validade: "+.n3$;
+mes "Codigo Segurança: "+.n4;
+mes "Email: "+.n5$;
+close;
+
+//historico de comras
+case 4:
+next;
+query_sql "Select * FROM `2_obzm_cash_compra_historico` WHERE `account_id` = '"+getcharid(3)+"' ORDER BY id DESC",.hist$;
+if (.hist$){	
+mes "    Historico de compras";
+mes " ";
+set .@o, getarraysize(.hist$);
+for (set .@i,0; .@i < getarraysize(.hist$); .@i++; .@o--){	mes (.@o-1)+". "+.hist$[.@i];	}
+close;
+}else{
+mes "    Historico de compras";
+mes " ";
+mes "Voce nao fez nenhuma compra.";
+close;
+} 
+
+
+
+
+
+//sair
+case 5:
+close;
+
+
+}
+
+*/
+
+
+case 3:
+close;
+
+}
+
+case 2: 
+mes "teste adm goto";
+close;
+
+}
+}else{goto O_normal;}
+
+
+OnInit:
+setarray $@itemid[0],	33000,											33001,											33002,
+						33003,											33004,											33005;
+
+setarray $@cash[0],		20,												40,												50,
+						70,												90,												100;
+
+setarray $@vo$[0],		"Vip 05 dias",									"Vip 10 dias",									"Vip 15 dias",
+						"Vip 20 dias",									"Vip 25 dias",									"Vip 30 dias";
+
+setarray $@rv$[0],		"^008000["+$@cash[0]+"] ROPS^000000",			"^008000["+$@cash[1]+"] ROPS^000000",			"^008000["+$@cash[2]+"] ROPS^000000",
+						"^008000["+$@cash[3]+"] ROPS^000000",			"^008000["+$@cash[4]+"] ROPS^000000",			"^008000["+$@cash[5]+"] ROPS^000000";
+
+setarray $@rn$[0],		"^900020["+$@cash[0]+"] ROPS Sem Rops^000000",	"^900020["+$@cash[1]+"] ROPS Sem Rops^000000",	"^900020["+$@cash[2]+"] ROPS Sem Rops^000000",
+						"^900020["+$@cash[3]+"] ROPS Sem Rops^000000",	"^900020["+$@cash[4]+"] ROPS Sem Rops^000000",	"^900020["+$@cash[5]+"] ROPS Sem Rops^000000";
+
+setarray $@r$[0],		"0",											"0",											"0",
+						"0",											"0",											"0";
+
+setarray $@n[0],		0,												0,												0,
+						0,												0,												0;
+end;
+
+OnPCLoginEvent:
+callfunc ("viponpclogin");
+end;
+}

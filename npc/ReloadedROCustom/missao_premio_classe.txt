@@ -1,0 +1,203 @@
+function	script	pegaclass	{
+setarray .@class[0],1/*"Job_Swordman"*/,	2/*"Job_Mage"*/, 			3/*"Job_Archer"*/, 				4/*"Job_Acolyte"*/, 
+					5/*"Job_Merchant"*/, 	6/*"Job_Thief"*/, 			24/*"Job_Gunslinger"*/, 		25/*"Job_Ninja"*/, 
+					7/*"Job_Knight"*/, 		8/*"Job_Priest"*/, 			9/*"Job_Wizard"*/, 				10/*"Job_Blacksmith"*/, 
+					11/*"Job_Hunter"*/, 	12 /*Assassin*/, 			14/*"Job_Crusader"*/, 			15/*"Job_Monk"*/, 
+					16/*"Job_Sage"*/, 		17/*"Job_Rogue"*/, 			18/*"Job_Alchemist"*/, 			19/*"Job_Bard"*/, 
+					20/*"Job_Dancer"*/, 	23/*"Job_Super_Novice"*/,	4047/*"Job_Star_Gladiator"*/, 	4049/*"Job_Soul_Linker"*/;
+setarray .@prem[0],	1108,					1602, 						1705, 							1505, 
+					1302, 					1208, 						13101, 							13010, 
+					1163, 					1522, 						1617, 							1360, 
+					1718, 					1254,						1410, 							1807,
+					1550, 					1222, 						1126, 							1907,
+					1960, 					1208,						1550,							1617;
+query_sql "SELECT `q1` FROM `3_quests` WHERE `accountid` = '"+getcharid(0)+"'", .@b$;
+if(.@b$ == "2"){for (	.@f = 0; .@f < getarraysize(.@class); .@f++	){
+						if (Class == .@class[.@f]){ mes "Um: "+.@prem[.@f]; getitem(.@prem[.@f],1);} } return; }else{for (.@a = 0; .@a < getarraysize(.@class); .@a++){
+																										if (Class == .@class[.@a]){
+																											callfunc ("msg",.@class[.@a], .@prem[.@a]);
+																											return;
+}else{
+mes "           [Velho Ferreiro]";
+mes " ";
+mes "nao tenho missao pra voce!";
+mes "vah crescer depois volte.";
+close;
+}}}}
+
+function	script	itens	{
+
+query_sql "SELECT `q1` FROM `3_quests` WHERE `accountid` = '"+getcharid(0)+"'", .@p$;
+setarray .@i[0],	502,	502,	502,	502,	502;
+setarray .@q[0],	5,		5,		5,		5,		5;
+if(.@p$ == "1"){	for	(	.@z = 0; .@z < getarraysize(.@i); .@z++	){
+					if	(	countitem(.@i[.@z]) >= .@q[.@z]	){	
+						mes "^66CDAA"+.@q[.@z]+"^000000 x "+getitemname(.@i[.@z])+"";	}else{
+						mes "^D2691E"+.@q[.@z]+"^000000 x "+getitemname(.@i[.@z])+"";
+						set .@k, 1;	}}
+if (.@k == 1){mes "Voce não tem todos os itens"; close;} return;
+}else{	
+			for	(	.@z = 0; .@z < getarraysize(.@i); .@z++	){
+				if	(	countitem(.@i[.@z]) >= .@q[.@z]	){	
+					mes "^66CDAA"+.@q[.@z]+"^000000 x "+getitemname(.@i[.@z])+"";	}else{
+					mes "^D2691E"+.@q[.@z]+"^000000 x "+getitemname(.@i[.@z])+"";	}
+}}
+ return;	}
+
+function	script	mob	{
+query_sql "SELECT `q1` FROM `3_quests` WHERE `accountid` = '"+getcharid(0)+"'", .@g$;
+setarray .@m[0],	1002,	1002;
+setarray .@v[0],	5,		5;
+if (.@g$ == "2"){	monster "jupe_ele",0,0,"Missao Velho Ferreiro",.@m[0],.@v[0],"Ferreiro::OnMobDeath"; monster "jupe_ele",0,0,"Missao Velho Ferreiro",.@m[1],.@v[1],"Ferreiro::OnMobDeath";	return;
+}else{for	(	.@x = 0; .@x < getarraysize(.@m); .@x++	){
+		mes "^D2691E"+.@v[.@x]+"^000000 x "+getmonsterinfo(.@m[.@x],0)+"";
+}}
+return;	
+}
+
+
+function	script	msg	{
+mes "           [Velho Ferreiro]";
+mes "olá guerreiro "+strcharinfo(0);
+mes " ";
+mes "depois de de muitos estudos";
+mes "obtive muitos conhecimentos e ";
+mes "e agora posso encantar armas";
+mes "mas isso leva tempo e recursos";
+next;
+mes "           [Velho Ferreiro]";
+mes "eu... poderia fazer uma arma encantada";
+mes "pra voce, mas tera de pegar algo pra mim";
+mes "irei precisar de recuros e voce de treino";
+mes "sim... treino...";
+mes "voce precisa treinar para poder usar";
+mes "a arma que farei para voce";
+next;
+mes "           [Velho Ferreiro]";
+mes "o que voce acha?";
+mes "esta pronto para isso?";
+next;
+if (select(" - Sim!: - Não, eu sou um bosta!") == 2 ){
+mes "           [Velho Ferreiro]";
+mes "fazer o que né? va embora então!";
+close;
+}
+mes "           [Velho Ferreiro]";
+mes "Assim que se fala "+strcharinfo(0)+"!";
+mes "voce precisa me trazer:";
+callfunc("itens");
+next;
+mes "           [Velho Ferreiro]";
+mes "voce tambem precisa treinar!";
+mes "derrote:";
+callfunc("mob");
+mes "mas isso só depois de voce pegar";
+mes "todos os itens pra mim MuHAHA~~~~";
+next;
+mes "           [Velho Ferreiro]";
+mes "ahh o premio sim... claro...";
+mes "lhe darei isso: "+getitemname(getarg(1));
+mes "agora vé pequeno gafanhoto!";
+query_sql "UPDATE `3_quests` SET `q1` = '1' WHERE `accountid` = '"+getcharid(0)+"'";
+close;
+return;
+}
+
+function	script	mapcheck	{
+deletearray .nome$;
+getmapunits(BL_PC,"jupe_ele",.nome$[0]);
+for ( .r = 0; .r < getarraysize(.nome$); .r++){
+	if (.nome$[.r] == strcharinfo(0)){
+end;
+}
+}
+return;
+}
+
+-	script	Ferreiro::Ferreiro	-1,{
+callfunc("mapcheck");
+query_sql "SELECT `q1` FROM `3_quests` WHERE `accountid` = '"+getcharid(0)+"'", .l$;
+if (.l$ == ""){query_sql "INSERT INTO `3_quests` (`accountid`) VALUES ('"+getcharid(0)+"')";
+				query_sql "SELECT `q1` FROM `3_quests` WHERE `accountid` = '"+getcharid(0)+"'", .l$;}
+if	(.l$ == "0"){	callfunc("pegaclass");	}	else if	(	.l$ == "1"	){	goto Case1;	}	else if	(	.l$ == "2"	){	goto Case2;	}	else if	(	.l$ == "3"	){	goto Case3;	}
+Case1:
+mes "           [Velho Ferreiro]";
+mes "deixa eu verificar se voce tem tudo!";
+callfunc("itens");
+next;
+mes "           [Velho Ferreiro]";
+mes " ";
+mes "Muito bem voce tem todos os itens";
+mes " ";
+mes "Gostaria de fazer a missao de treino";
+mes "agora mesmo?";
+next;
+if (select(" - SIM!: - NÃO!, quero me preparar primeiro") == 2){
+mes "           [Velho Ferreiro]";
+mes " ";
+mes "OK! quando estiver pronto....";
+mes "é soh falar comigo!!";
+query_sql "UPDATE `3_quests` SET `q1` = '2' WHERE `accountid` = '"+getcharid(0)+"'";
+close;
+}
+query_sql "UPDATE `3_quests` SET `q1` = '2' WHERE `accountid` = '"+getcharid(0)+"'";
+Case2:
+mes "           [Velho Ferreiro]";
+mes "irei te teleportar para um lugar...";
+mes "e irei criar alguns mobs la...";
+mes "se voce matar tudo, BEMG!..";
+mes "voce passa no teste! e ainda";
+mes "leva o premio pra casa!!";
+next;
+if(select(" - Bora Lá!: - To Fraco Ainda =/") == 2){
+mes "           [Velho Ferreiro]";
+mes " ";
+mes "Porra!";
+mes "voce n fez quando entregou os itens";
+mes "e ta peidando na farofa agora tbm?";
+mes "CAI FORA!";
+close;
+}
+killmonster "jupe_ele","Ferreiro::OnMobDeath";
+set .morte, 0;
+set .falta, 10;
+callfunc("mob");
+warp "jupe_ele",42,35;
+close;
+
+Case3:
+mes "           [Velho Ferreiro]";
+mes " ";
+mes "Olá "+strcharinfo(0);
+mes "Voce ja fez essa missão";
+mes "ela soh pode ser feita uma vez!";
+mes "te vejo por ai!";
+close;
+
+OnMobDeath:
+.morte++;
+.falta--;
+announce "Voce matou: "+.morte+", ainda faltam: "+.falta+"",bc_self,0xF4A460;
+if (.morte == 10){goto G_anhou;}
+end;
+
+G_anhou:
+announce "[Velho Ferreiro] - Parabens "+strcharinfo(0)+" você passou na prova!",bc_all,0xF4A460;
+mes "           [Velho Ferreiro]";
+mes " ";
+mes "Aqui esta seu premio!";
+set .morte, 0;
+set .falta, 10;
+callfunc("pegaclass");
+query_sql "UPDATE `3_quests` SET `q1` = '3' WHERE `accountid` = '"+getcharid(0)+"'";
+close2;
+warp "prontera",149,164;
+end;
+
+OnInit:
+//Balao (sala)
+waitingroom "Quest Ferreiro",0;
+end;
+}
+prontera,164,175,4	duplicate(Ferreiro)	Ferreiro#prt	621
+jupe_ele,42,55,4	duplicate(Ferreiro)	Ferreiro#jup	621

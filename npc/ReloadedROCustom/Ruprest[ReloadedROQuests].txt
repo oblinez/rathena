@@ -1,0 +1,118 @@
+prontera,154,176,6	script	Ruprest	621,{
+	
+set .n$,"Ruprest[ReloadedRO Quests]";
+
+//itens nescessarios para quest
+setarray .itemnesc1[0],502,502,502;
+setarray .itemnesc2[0],502,502;
+
+//quantidades dos itens para quest
+setarray .itemnescquant1[0],5,10,15;
+setarray .itemnescquant2[0],30,19;
+
+//itens de premiação
+setarray .itemprem1[0],502;
+setarray .itemprem2[0],502;
+
+//quantidade de itens premio
+setarray .itemprem1quant[0],1;
+setarray .itemprem2quant[0],2;
+
+mes .n$;
+mes "Saudações, "+strcharinfo(0)+"!";
+mes " ";
+mes "Que tal ajudar o velho Ruprest?";
+mes "Prometo que a recompensa será boa!";
+
+if(select("Sim:Não") == 2 ) close;
+
+switch(select("O sentido da vida:A cura para a dor:Sair ")){
+	
+	case 1:
+	next;
+	mes .n$;
+	mes "Você gostaria de ter as respostas";
+	mes "sobre verdade, vida e universo?";
+	mes "Não? Que bom, pois eu só tenho cerveja!";
+	next;
+	mes .n$;
+	mes "Traga-me: ";
+	mes .itemnescquant1[0]+" x "+getitemname( .itemnesc1[0]);
+	mes .itemnescquant1[1]+" x "+getitemname( .itemnesc1[1]);
+	mes .itemnescquant1[2]+" x "+getitemname( .itemnesc1[2]);
+	mes "E então lhe darei uma caneca";
+	mes "da melhor cerveja do reino!";
+	next;
+	switch(select("Eu já possuo os itens!:Eu não tenho o que preciso.")){
+		
+		case 1:
+		mes .n$;
+		mes " ";
+		mes "Deixe-me verificar...";
+		if(countitem(.itemnesc1[0]) >= .itemnescquant1[0] && 
+			countitem(.itemnesc1[1]) >= .itemnescquant1[1] && 
+				countitem(.itemnesc1[2]) >= .itemnescquant1[2] && .itemnescquant1[0]+.itemnescquant1[1]+.itemnescquant1[2] == 30){
+					mes "Excelente, você já tem tudo o que eu preciso!";
+					delitem(.itemnesc1[0]), .itemnescquant1[0];
+					delitem(.itemnesc1[1]), .itemnescquant1[1];
+					delitem(.itemnesc1[2]), .itemnescquant1[2];
+					mes "Aqui está o que prometi!";
+					mes getitemname(.itemprem1[0]);
+					getitem(.itemprem1[0]),  .itemprem1quant[0];
+					close;
+					} else{
+						mes "Hum..Parece que falta algo, volte mais tarde.";
+						close;
+						}
+				
+		case 2:
+		mes .n$;
+		mes " ";
+		mes "Volte quando conseguir todos os itens.";
+		close;
+		}
+	
+	
+	case 2:
+	next;
+	mes .n$;
+	mes "O que você acha de ervas?";
+	mes "São boas não? Hehehehe";
+	next;
+	mes .n$;
+	mes "Traga-me: ";
+	mes .itemnescquant2[0]+" x "+getitemname( .itemnesc2[0]);
+	mes .itemnescquant2[1]+" x "+getitemname( .itemnesc2[1]);
+	mes "A mistura dessas duas produz uma";
+	mes "poção de excelente propriedade curativa!";
+	next;
+	switch(select("Eu já possuo os itens!:Eu não tenho o que preciso.")){
+		
+		case 1:
+		mes .n$;
+		mes " ";
+		mes "Deixe-me verificar...";
+		if(countitem(.itemnesc2[0]) == .itemnescquant2[0] && 
+			countitem(.itemnesc2[1]) == .itemnescquant2[1] ){
+					mes "Excelente, você já tem tudo o que eu preciso!";
+					delitem(.itemnesc2[0]), .itemnescquant2[0];
+					delitem(.itemnesc2[1]), .itemnescquant2[1];
+					mes "Aqui está o que prometi!";
+					mes getitemname(.itemprem2[0]);
+					getitem(.itemprem2[0]),  .itemprem2quant[0];
+					close;
+					} else{
+						mes "Hum..Parece que falta algo, volte mais tarde.";
+						close;
+						}
+				
+		case 2:
+		mes .n$;
+		mes " ";
+		mes "Volte quando conseguir todos os itens.";
+		close;
+		}
+	case 3: close;
+	
+	}
+}

@@ -1,0 +1,90 @@
+prontera,151,175,4	script	PvP Event	734,{
+end;
+OnInit:
+initnpctimer "PvP Event";
+waitingroom "PvP Desligado",0;
+end;
+
+OnPCKillEvent:
+warp "prontera",149,164, getcharid(0,rid2name(killedrid));
+end;
+
+OnPCDieEvent:
+getitem 33006,1,getcharid(3, rid2name(killerrid));
+end;
+
+
+OnTimer30000:
+delwaitingroom "PvP Event";
+announce "PvP Event - Evento iniciará em 2 minutos!",bc_all;
+waitingroom "PvP Aberto!",15;//"PvP Event::OnFull",2;
+enablewaitingroomevent "PvP Event";
+getwaitingroomusers "PvP Event";
+end;
+
+OnTimer60000:
+getwaitingroomusers "PvP Event";
+if (.@waitingroom_usercount >= 1 ){
+	for ( .w = 0; .w < .@waitingroom_usercount; .w++){
+		warp "force_4-1",rand(86,113),rand(113,86),getcharid(0,rid2name(.@waitingroom_users[.w]));
+		setarray .nome$[.w],strcharinfo(0, getcharid(0,rid2name(.@waitingroom_users[.w])));
+	}
+	announce "PvP Event - Os Jogadores [ "+implode(.nome$, " - ")+" ]Entraram Irao Se Enfrentar Em Instantes!!",bc_all;
+	deletearray .nome$;
+	stopnpctimer "PvP Event";
+	disablewaitingroomevent "PvP Event";
+	delwaitingroom "PvP Event";
+	sleep 2000;
+	mapannounce "force_4-1","PvP Event - o PvP ira iniciar em 5 Segundos!",bc_map;
+	sleep 1000;
+	mapannounce "force_4-1","PvP Event - o PvP ira iniciar em 4 Segundos!",bc_map;
+	sleep 1000;
+	mapannounce "force_4-1","PvP Event - o PvP ira iniciar em 3 Segundos!",bc_map;
+	sleep 1000;
+	mapannounce "force_4-1","PvP Event - o PvP ira iniciar em 2 Segundos!",bc_map;
+	sleep 1000;
+	mapannounce "force_4-1","PvP Event - o PvP ira iniciar em 1 Segundos!",bc_map;
+	sleep 1000;
+	setmapflag "force_4-1", mf_pvp;
+	setmapflag "force_4-1", mf_noteleport;
+	setmapflag "force_4-1", mf_nogo;
+	setmapflag "force_4-1", mf_nowarp;
+	.users = getareausers("force_4-1",86,113,113,86);
+	while(.users >= 2){
+			.users = getareausers("force_4-1",86,113,113,86);
+			if (.n == 0){waitingroom "PvP Em Andamento",0; .n = 1;}
+			sleep 2000;
+	}
+	if (getmapusers("force_4-1") == 1){
+		getmapunits(BL_PC,"force_4-1",.us$[0]);
+		announce "PvP Event - Temos um vencedor!! [ "+.us$[0]+" ] Passou O Rodo Em Geral!!",bc_all;
+		removemapflag "force_4-1", mf_pvp;
+		removemapflag "force_4-1", mf_nowarp;
+		removemapflag "force_4-1", mf_noteleport;
+		removemapflag "force_4-1", mf_nogo;
+		sleep 5000;
+		warp "prontera",149,164,getcharid(0,.us$[0]);
+		deletearray .us$;
+		}
+	removemapflag "force_4-1", mf_pvp;
+	removemapflag "force_4-1", mf_nowarp;
+	removemapflag "force_4-1", mf_noteleport;
+	removemapflag "force_4-1", mf_nogo;
+	delwaitingroom "PvP Event";
+	waitingroom "PvP Desligado",0;
+	initnpctimer "PvP Event";
+	end;
+}else{
+	announce "nao tem soldado para a batalha, o evento foi cancelado!",bc_all;
+	warpwaitingpc "prontera",162,170;
+	deletearray $@warpwaitingpc;
+	stopnpctimer "PvP Event";
+	delwaitingroom "PvP Event";
+	waitingroom "PvP Desligado",0;
+	initnpctimer "PvP Event";
+	end;
+}
+
+
+
+}
