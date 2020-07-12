@@ -1,0 +1,7 @@
+prontera,144,170,5	script	Aluguel VIP	719,{
+
+
+atcommand "@go 15";
+end;
+
+}
